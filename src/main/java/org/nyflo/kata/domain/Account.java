@@ -11,7 +11,8 @@ public class Account {
         return operations.stream().mapToDouble(Operation::getAmount).sum();
     }
 
-    public void makeDeposit(Deposit deposit) {
-        operations.add(deposit);
+    public void makeOperation(Operation operation) {
+        operations.add(operation);
     }
+
 }

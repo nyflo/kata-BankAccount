@@ -3,6 +3,7 @@ package org.nyflo.kata;
 import org.junit.Test;
 import org.nyflo.kata.domain.Client;
 import org.nyflo.kata.domain.Deposit;
+import org.nyflo.kata.domain.Withdrawal;
 
 import java.time.LocalDateTime;
 
@@ -50,6 +51,28 @@ public class BankTest {
 
         then(bank.getAccount(Client.of(1)).getBalance()).isEqualTo(30d);
         then(bank.getAccount(Client.of(2)).getBalance()).isEqualTo(100d);
+    }
+
+    @Test
+    public void bankClient_can_makeWithrawal() {
+        bank.makeDeposit(Client.of(1), Deposit.of(LocalDateTime.now(), 100d));
+        bank.makeWithdrawal(Client.of(1), Withdrawal.of(LocalDateTime.now(), -10d));
+        then(
+                bank.getAccount(Client.of(1)).getBalance()
+        ).isEqualTo(
+                90d
+        );
+    }
+
+    @Test
+    public void bankClient_can_makeWithrawalOfAllItsSavings() {
+        bank.makeDeposit(Client.of(1), Deposit.of(LocalDateTime.now(), 100d));
+        bank.makeWithdrawal(Client.of(1), Withdrawal.of(LocalDateTime.now(), -100d));
+        then(
+                bank.getAccount(Client.of(1)).getBalance()
+        ).isEqualTo(
+                0d
+        );
     }
 
 }
