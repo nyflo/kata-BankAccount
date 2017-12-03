@@ -16,7 +16,7 @@ public class BankTest {
     @Test
     public void bankClient_isCreated_automatically() {
         then(
-                bank.getAccount(Client.of(1)).getBalance()
+                bank.getBalance(Client.of(1))
         ).isEqualTo(
                 0
         );
@@ -26,7 +26,7 @@ public class BankTest {
     public void bankClient_can_makeOneDeposit() {
         bank.makeDeposit(Client.of(1), Deposit.of(LocalDateTime.now(), 10.50d));
         then(
-                bank.getAccount(Client.of(1)).getBalance()
+                bank.getBalance(Client.of(1))
         ).isEqualTo(
                 10.50d
         );
@@ -37,7 +37,7 @@ public class BankTest {
         bank.makeDeposit(Client.of(1), Deposit.of(LocalDateTime.now(), 10.50d));
         bank.makeDeposit(Client.of(1), Deposit.of(LocalDateTime.now(), 5d));
         then(
-                bank.getAccount(Client.of(1)).getBalance()
+                bank.getBalance(Client.of(1))
         ).isEqualTo(
                 15.50d
         );
@@ -49,8 +49,8 @@ public class BankTest {
         bank.makeDeposit(Client.of(2), Deposit.of(LocalDateTime.now(), 100d));
         bank.makeDeposit(Client.of(1), Deposit.of(LocalDateTime.now(), 20d));
 
-        then(bank.getAccount(Client.of(1)).getBalance()).isEqualTo(30d);
-        then(bank.getAccount(Client.of(2)).getBalance()).isEqualTo(100d);
+        then(bank.getBalance(Client.of(1))).isEqualTo(30d);
+        then(bank.getBalance(Client.of(2))).isEqualTo(100d);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class BankTest {
         bank.makeDeposit(Client.of(1), Deposit.of(LocalDateTime.now(), 100d));
         bank.makeWithdrawal(Client.of(1), Withdrawal.of(LocalDateTime.now(), -10d));
         then(
-                bank.getAccount(Client.of(1)).getBalance()
+                bank.getBalance(Client.of(1))
         ).isEqualTo(
                 90d
         );
@@ -69,9 +69,23 @@ public class BankTest {
         bank.makeDeposit(Client.of(1), Deposit.of(LocalDateTime.now(), 100d));
         bank.makeWithdrawal(Client.of(1), Withdrawal.of(LocalDateTime.now(), -100d));
         then(
-                bank.getAccount(Client.of(1)).getBalance()
+                bank.getBalance(Client.of(1))
         ).isEqualTo(
                 0d
+        );
+    }
+
+    @Test
+    public void bankClient_can_getOperationsHistory() {
+        bank.makeDeposit(Client.of(1), Deposit.of(LocalDateTime.of(2017, 11, 15, 12, 30), 100d));
+        bank.makeDeposit(Client.of(1), Deposit.of(LocalDateTime.of(2017, 12, 1, 12, 30), 15d));
+        bank.makeWithdrawal(Client.of(1), Withdrawal.of(LocalDateTime.of(2017, 11, 18, 12, 30), -50d));
+        then(
+                bank.getHistory(Client.of(1))
+        ).containsExactly(
+                Deposit.of(LocalDateTime.of(2017, 11, 15, 12, 30), 100d),
+                Withdrawal.of(LocalDateTime.of(2017, 11, 18, 12, 30), -50d),
+                Deposit.of(LocalDateTime.of(2017, 12, 1, 12, 30), 15d)
         );
     }
 

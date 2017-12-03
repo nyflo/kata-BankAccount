@@ -15,4 +15,7 @@ public class Account {
         operations.add(operation);
     }
 
+    public List<Operation> getOperations() {
+        return operations;
+    }
 }

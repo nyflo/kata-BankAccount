@@ -31,7 +31,29 @@ public class Deposit implements Operation {
         return amount;
     }
 
+    @Override
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Deposit deposit = (Deposit) o;
+
+        if (Double.compare(deposit.amount, amount) != 0) return false;
+        return dateTime != null ? dateTime.equals(deposit.dateTime) : deposit.dateTime == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = dateTime != null ? dateTime.hashCode() : 0;
+        temp = Double.doubleToLongBits(amount);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 }
